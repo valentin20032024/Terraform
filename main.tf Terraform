@@ -1,0 +1,17 @@
+terraform {
+  required_providers {
+    openstack = {
+      source  = "terraform-provider-openstack/openstack"
+      version = "~> 1.48.0"
+    }
+  }
+}
+
+provider "openstack" {
+  auth_url    = var.OS_AUTH_URL
+  user_name   = var.OS_USERNAME
+  password    = var.OS_PASSWORD
+  tenant_name = var.OS_PROJECT_NAME
+  domain_name = var.OS_USER_DOMAIN_NAME
+  region      = var.OS_REGION_NAME
+}
