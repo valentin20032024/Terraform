@@ -12,3 +12,53 @@ terraform {
 provider "openstack" {
   # Configuration can be done via environment variables or a separate provider config file
 }
+
+# Create a SSH keypair
+resource "openstack_compute_keypair_v2" "keypair_xavki" {
+  name       = "keypair_xavki"
+  public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINKkmKOi1M0P7zIG5SlCzCkC/DAmoO7CsGD2ANKtH5my oki@doki"
+}
+
+# Create a web security group
+resource "openstack_compute_secgroup_v2" "web_server" {
+  name        = "web_server"
+  description = "Security Group Description"
+
+  rule {
+    from_port   = 22
+    to_port     = 22
+    ip_protocol = "tcp"
+    cidr        = "0.0.0.0/0"
+  }
+
+  rule {
+    from_port   = 80
+    to_port     = 80
+    ip_protocol = "tcp"
+    cidr        = "0.0.0.0/0"
+  }
+
+  rule {
+    from_port   = 443
+    to_port     = 443
+    ip_protocol = "tcp"
+    cidr        = "0.0.0.0/0"
+  }
+}
+
+# Create a web server
+resource "openstack_compute_instance_v2" "web-server" {
+  name            = "web-server"
+  image_id        = var.image_id
+  flavor_name     = var.flavor_name
+  key_pair        = openstack_compute_keypair_v2.keypair_xavki.name
+  security_groups = [openstack_compute_secgroup_v2.web_server.name]
+
+  metadata = {
+    application = "web-app"
+  }
+
+  network {
+    name = var.network_name
+  }
+}
