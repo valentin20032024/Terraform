@@ -1,0 +1,17 @@
+variable "image_id" {
+  description = "The ID of the image to use for the instance"
+  type        = string
+  default     = "72a3f273-d2c4-4bd3-8002-fa910e6ed7df"
+}
+
+variable "flavor_name" {
+  description = "The name of the flavor to use for the instance"
+  type        = string
+  default     = "a1-ram2-disk80-perf1"
+}
+
+variable "network_name" {
+  description = "The name of the network to attach the instance to"
+  type        = string
+  default     = "ext-net1"
+}
