@@ -10,13 +10,50 @@ terraform {
 
 # Configure the OpenStack Provider
 provider "openstack" {
-  # Configuration can be done via environment variables or a separate provider config file
+  auth_url    = "https://api.pub2.infomaniak.cloud:5000/v3"  # URL d'authentification Keystone
+  user_name   = "valentin"
+  password    = "Azerty"
+  tenant_name = "Teste"
+  domain_name = "Default"
+  region      = "France"
+}
+
+# Define input variables
+variable "OS_USERNAME" {
+  description = "The OpenStack Username"
+  type        = string
+  default     = "valentin"
+}
+
+variable "OS_PASSWORD" {
+  description = "The OpenStack Password"
+  type        = string
+  default     = "Azerty"
+  sensitive   = true
+}
+
+variable "OS_PROJECT_NAME" {
+  description = "The OpenStack Project Name"
+  type        = string
+  default     = "Teste"
+}
+
+variable "OS_USER_DOMAIN_NAME" {
+  description = "The OpenStack User Domain Name"
+  type        = string
+  default     = "Default"
+}
+
+variable "OS_REGION_NAME" {
+  description = "The OpenStack Region Name"
+  type        = string
+  default     = "France"
 }
 
 # Create a SSH keypair
-resource "openstack_compute_keypair_v2" "keypair_val" {
-  name       = "keypair_val"
-  public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINKkmKOi1M0P7zIG5SlCzCkC/DAmoO7CsGD2ANKtH5my oki@doki"
+resource "openstack_compute_keypair_v2" "keypair_valki" {
+  name       = "keypair_valki"
+  public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINKkmKOi1M0P7zIG5SlCzCkC/DAmoO7CsGD2ANKtH5my votre_email@example.com"
 }
 
 # Create a web security group
@@ -49,9 +86,9 @@ resource "openstack_compute_secgroup_v2" "web_server" {
 # Create a web server
 resource "openstack_compute_instance_v2" "web-server" {
   name            = "web-server"
-  image_id        = var.image_id
-  flavor_name     = var.flavor_name
-  key_pair        = openstack_compute_keypair_v2.keypair_val.name
+  image_id        = "a0c44881-50cc-4c9d-9753-89206cff776d" # Assurez-vous que c'est l'ID correct pour Debian 12
+  flavor_name     = "a4-ram16-disk50-perf1" # Remplacez par le nom de votre flavor
+  key_pair        = openstack_compute_keypair_v2.keypair_valki.name
   security_groups = [openstack_compute_secgroup_v2.web_server.name]
 
   metadata = {
@@ -59,6 +96,6 @@ resource "openstack_compute_instance_v2" "web-server" {
   }
 
   network {
-    name = var.network_name
+    name = "ext-net1" # Remplacez par le nom de votre réseau
   }
 }
