@@ -14,8 +14,8 @@ provider "openstack" {
 }
 
 # Create a SSH keypair
-resource "openstack_compute_keypair_v2" "keypair_xavki" {
-  name       = "keypair_xavki"
+resource "openstack_compute_keypair_v2" "keypair_val" {
+  name       = "keypair_val"
   public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINKkmKOi1M0P7zIG5SlCzCkC/DAmoO7CsGD2ANKtH5my oki@doki"
 }
 
@@ -51,7 +51,7 @@ resource "openstack_compute_instance_v2" "web-server" {
   name            = "web-server"
   image_id        = var.image_id
   flavor_name     = var.flavor_name
-  key_pair        = openstack_compute_keypair_v2.keypair_xavki.name
+  key_pair        = openstack_compute_keypair_v2.keypair_val.name
   security_groups = [openstack_compute_secgroup_v2.web_server.name]
 
   metadata = {
